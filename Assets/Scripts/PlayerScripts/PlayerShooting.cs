@@ -2,32 +2,45 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public GameObject projectilePrefab; // Reference to the projectile prefab
-    public Transform firePoint; // Transform representing the point where projectiles will be spawned
+    public GameObject projectilePrefab; // prefaben för skotten
+    public Transform firePoint; // var skotten kommer ut ifrån
 
-    public float projectileSpeed = 10f; // Speed of the projectile
+    public float projectileSpeed = 10f; // fart
+    public float fireRate = 0.5f; // firerate
 
-    // Update is called once per frame
+    private float nextFireTime = 0f; // nästa tillåten skjut tid
+    private bool isFiring = false; // om den skjuter
+
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) // Check for left mouse button click
+        if (Input.GetMouseButtonDown(0) && Time.time > nextFireTime)
         {
-            FireProjectile(); // Call the method to fire a projectile
+            isFiring = true; // variabel till true när man börjar skjuta
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            isFiring = false; // variabel till false när man slutar skjuta
+        }
+
+        if (isFiring && Time.time > nextFireTime) // om sant skjut skottet
+        {
+            FireProjectile();
+            nextFireTime = Time.time + 1f / fireRate; // uppdatera nästa time beroende av fireraten
         }
     }
 
     void FireProjectile()
     {
-        // Instantiate a new projectile at the firePoint position and rotation
+        // skapa skottet från punkten där den skjuts utifrån med dens rotation från dens position
         GameObject projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
 
-        // Get the Rigidbody2D component of the projectile
+        // få rigidbody2d
         Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
 
-        // Set the velocity of the projectile to move straight forward
-        rb.velocity = firePoint.up * projectileSpeed; // Use firePoint.up instead of transform.up
+        // farten av rigidbody
+        rb.velocity = firePoint.up * projectileSpeed;
 
-        // Destroy the projectile after a certain time (adjust this value based on your needs)
-        Destroy(projectile, 2.0f);
+        Destroy(projectile, 5.0f);
     }
 }

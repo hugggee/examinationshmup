@@ -1,44 +1,47 @@
-using TMPro;
+using TMPro; // för texten
 using UnityEngine;
 
 public class PlayerMouseMovement : MonoBehaviour
 {
-    public TextMeshProUGUI HPText = null;
+    public TextMeshProUGUI HPText = null; 
     public TextMeshProUGUI PointText = null;
     public Playerdata CurrentPlayerData = null;
-    public float moveSpeed = 5f; // Adjust the speed as needed
-    public float stopDistance = 0.1f; // Adjust the distance threshold to stop movement
+    public float moveSpeed = 2.5f; // farten
+    public float stopDistance = 0.1f; // närheten till musen för att stoppa farten
+
+
+
 
     void Update()
     {
         HPText.text = CurrentPlayerData.HP + " HP";
         PointText.text = CurrentPlayerData.Points + " Points";
-        // Get the mouse position in the world space
+        // få muspositionen i skärmen
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousePosition.z = 0f; // Ensure the z-coordinate is set to 0
+        mousePosition.z = 0f; // så att z-koordinaten är 0
 
-        // Calculate the direction to the mouse position
+        // direktionen till musen
         Vector3 direction = (mousePosition - transform.position).normalized;
 
-        // Calculate the distance to the mouse position
+        // distansen till musen
         float distance = Vector3.Distance(transform.position, mousePosition);
 
-        // Check if the player is close to the mouse cursor
+        // om spelaren är nära musen
         if (distance > stopDistance)
         {
-            // Move the object towards the mouse position with the original speed
+            // rör objekten till musen med farten
             transform.Translate(direction * moveSpeed * Time.deltaTime);
         }
         else
         {
-            // Stop the movement when close to the mouse cursor
+            // gör så att playern sluta röra sig nära msuen
             transform.Translate(Vector3.zero);
         }
 
-        // Optionally, you can reset the speed when the mouse is moved away
+        // stäng av farten om musen är utanför spelet så den inte flyger iväg förevigt o fy fan vad jag hatade det som inåt helvete
         if (Input.GetAxis("Horizontal") != 0f || Input.GetAxis("Vertical") != 0f)
         {
-            moveSpeed = 5f; // Set the speed back to 5
+            moveSpeed = 2.5f; // om musen är tillbaka sätt farten till 5 igen
         }
     }
 }

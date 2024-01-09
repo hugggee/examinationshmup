@@ -8,4 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: "Assets/Scenes/slutsk\xE4rm.unity"
+    guid: e60dac96c90cb8a41865ac9d62b38f9c
+  - enabled: 1
+    path: Assets/Scenes/mainmenu.unity
+    guid: f1dc573e9161e524c81e28520d603602
   m_configObjects: {}
