@@ -8,8 +8,9 @@ public class bullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Enemy enemyComp = collision.gameObject.GetComponent<Enemy>(); // vet inte om detta är smart att bara göra en till
-        Enemy2 enemy2Comp = collision.gameObject.GetComponent<Enemy2>(); // men kommer inte på något bättre
+        Enemy enemyComp = collision.gameObject.GetComponent<Enemy>();
+        Enemy2 enemy2Comp = collision.gameObject.GetComponent<Enemy2>(); // detta sättet suger balle
+        Enemy3 enemy3Comp = collision.gameObject.GetComponent<Enemy3>(); 
 
         if (enemyComp != null)
         {
@@ -20,7 +21,13 @@ public class bullet : MonoBehaviour
         else if (enemy2Comp != null)
         {
             enemy2Comp.TakeDamage();
-            CurrentPlayerData.AddPoints(15); // mer skadlig fiende, borde ge mer poäng
+            CurrentPlayerData.AddPoints(15);
+            GameObject.Destroy(gameObject);
+        }
+        else if (enemy3Comp != null)
+        {
+            enemy3Comp.TakeDamage();
+            CurrentPlayerData.AddPoints(5); // gubben skadar inte piss
             GameObject.Destroy(gameObject);
         }
     }

@@ -4,39 +4,55 @@ using UnityEngine.SceneManagement;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public GameObject commonEnemyPrefab = null; // orefab1
-    public GameObject rareEnemyPrefab = null;   // prefab2
-    public int rounds = 3;               // hur mång arundor
-    public int commonEnemyMultiplier = 2; // hur många gånger fienden ska öka beroende på vilken runda
-    public int rareEnemyMultiplier = 1;   // samma sak fast med ovanlig fiende
+    public GameObject commonEnemyPrefab = null;
+    public GameObject rareEnemyPrefab = null;
+    public GameObject fastEnemyPrefab = null; // New enemy type
+    public Playerdata playerData;
 
-    private int currentRound = 1; // vilken runda
+    private int currentRound = 1;
+    private int currentWave = 1;
 
-    // hade stora problem med serializedfield, vet inte hur jag skulle göra utan det så ändrade det
     private void Start()
     {
-        StartCoroutine(SpawnEnemies());
+        StartCoroutine(SpawnWaves());
     }
 
-    IEnumerator SpawnEnemies()
+    IEnumerator SpawnWaves()
     {
-        while (currentRound <= rounds)
+        while (currentRound <= 3)
         {
-            int commonEnemyCount = commonEnemyMultiplier * currentRound;
-            int rareEnemyCount = rareEnemyMultiplier * currentRound;
+            while (currentWave <= 3)
+            {
+                yield return SpawnEnemiesForWave();
+                yield return new WaitUntil(() => AllEnemiesDead());
+                currentWave++;
+            }
 
-            SpawnCommonEnemies(commonEnemyCount);
-            SpawnRareEnemies(rareEnemyCount);
-
-            // vänta tills det inte finns några aktiva fiender kvar
-            yield return new WaitUntil(() => AllEnemiesDead());
-
-            // öka currentRound med 1 när alla fiender är döda
+            currentWave = 1;
             currentRound++;
+
+            if (playerData != null)
+            {
+                playerData.HP += 10;
+            }
+
+            SceneManager.LoadScene("Round" + currentRound);
         }
 
-        // byt scen när alla rundor är klara
         SceneManager.LoadScene("slutskärm");
+    }
+
+    IEnumerator SpawnEnemiesForWave()
+    {
+        int commonEnemyCount = currentRound * currentWave * 2;
+        int rareEnemyCount = currentRound * currentWave;
+        int fastEnemyCount = currentRound * currentWave; // Adjust count as needed
+
+        SpawnCommonEnemies(commonEnemyCount);
+        SpawnRareEnemies(rareEnemyCount);
+        SpawnFastEnemies(fastEnemyCount); // Spawn the new enemy type
+
+        yield break;
     }
 
     void SpawnCommonEnemies(int count)
@@ -57,9 +73,17 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    void SpawnFastEnemies(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            GameObject enemy = Instantiate(fastEnemyPrefab, GetRandomSpawnPosition(), Quaternion.identity);
+            enemy.GetComponent<Enemy3>().OnEnemyDeath += HandleEnemyDeath; // Replace NewEnemyScript with the actual script for the new enemy
+        }
+    }
+
     Vector3 GetRandomSpawnPosition()
     {
-        // random spawn position
         float x = Random.Range(14f, 20f);
         float y = Random.Range(-6f, 6f);
         return new Vector3(x, y, 0f);
@@ -67,12 +91,13 @@ public class EnemySpawner : MonoBehaviour
 
     void HandleEnemyDeath()
     {
- 
+        // Handle enemy death if needed
     }
 
     bool AllEnemiesDead()
     {
-        // Om det finns fiender i scenen och om inte så är alla fiender döda och nästa runda börjar
-        return GameObject.FindObjectsOfType<Enemy>().Length == 0 && GameObject.FindObjectsOfType<Enemy2>().Length == 0;
+        return GameObject.FindObjectsOfType<Enemy>().Length == 0 &&
+               GameObject.FindObjectsOfType<Enemy2>().Length == 0 &&
+               GameObject.FindObjectsOfType<Enemy3>().Length == 0; // Replace NewEnemyScript with the actual script for the new enemy
     }
 }

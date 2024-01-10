@@ -8,7 +8,7 @@ public class enemyboulet : MonoBehaviour
 
     public void DealDamage()
     {
-        CurrentPlayerData.HP -= 5;
+        CurrentPlayerData.HP -= 2;
         GameObject.Destroy(gameObject);
     }
     private void OnCollisionEnter2D(Collision2D collision)
