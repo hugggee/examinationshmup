@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 063190d09963c704188b11b206b445aa, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  Points: 0
+  Points: 445
   HP: 0

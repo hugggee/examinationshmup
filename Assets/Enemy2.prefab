@@ -272,7 +272,7 @@ MonoBehaviour:
   firePoint2: {fileID: 7854479865917740012}
   firePoint3: {fileID: 2110852467908919828}
   movementSpeed: 1.4
-  fireRate: 0.6
+  fireRate: 0.3
   bulletspeed: 3
   CurrentPlayerData: {fileID: 11400000, guid: d8a8519ebb07a174a8dafa081d0af213, type: 2}
   OffScreenChecker: {fileID: 208914166485357454, guid: abdc0ff8c0a531c40894ac16c9e090ad, type: 3}
